@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls.conf import include
 from blog.views import *
 
 urlpatterns = [
@@ -28,5 +29,7 @@ urlpatterns = [
     #path('inicio', AboutView.as_view(template_name='inicio.html')),
     #path('index', AboutView.as_view()),
     #path("", index, name='index'),
-    #path("index", home_view, name='home_view')
+    #path("index", home_view, name='home_view'),
+    #path('blog/', include('blog.urls')),
+    #path('auth/', include('auth.urls'))
 ]
