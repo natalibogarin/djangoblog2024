@@ -1,0 +1,62 @@
+{% extends "base.html" %} <!-- Indica que hereda de base.html -->
+{% load static %}
+{% block contenido %}
+
+<section>
+    <h1>{{post.titulo}}</h1>
+    {% if post.fecha_publicacion %}
+        <div>
+            {{post.fecha_publicacion}}
+        </div>
+    {% else %}
+        <a href="{% url 'apps.blog:publicar_post' id=post.id %}">Publicar artículo</a>
+    {% endif %}
+
+    <p>
+        {{post.contenido}}
+    </p>
+    <div class="container">
+        <hr>
+        <div class="container">
+            {% for comentarios in post.commentarios.all %}
+            <br>
+                {% if user.is_authenticated or comentario.aprobado %}
+                    <p>
+                        El {{ comentario.fch_creado }} <b>{{ comentario.autor }}</b> escribió:
+                    </p>
+                    <p>
+                        {{ comentario.cuerpo_comentario | linebreaks }}
+                    </p>
+                    {% if not comentario.aprobado %}
+                            <a class="btn btn-default" href="{% url 'apps.blog:eliminar_comentario' id=comentario.id %}"><span class="glyphicon glyphicon-remove"></span></a>
+                            <a class="btn btn-default" href="{% url 'apps.blog:aprobar_comentario' id=comentario.id %}"><span class="glyphicon glyphicon-ok"></span></a>
+                    {% endif %}
+                {% endif %}
+                {% empty %}
+                    <p>No hay comentarios en este artículo</p>
+            {% endfor %}
+            {% if user.is_authenticated%}
+                <h3>Dejanos tu comentario:</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div>
+                        {{form.autor}}
+                    </div>
+                    <div>
+                        {{ form.cuerpo_comentario }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enviar comentario</button>
+                </form>
+
+            {% else %}
+                <p>Para agregar comentarios debe autenticarse <br>
+                    <a href="{% url 'apps.blog_auth:login' %}">Iniciar sesión</a>
+                    <a href="{% url 'apps.blog_auth:register' %}">Registrarse</a>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+</section>
+
+{% endblock%}

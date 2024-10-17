@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 from django.utils import timezone
 
 # Create your models here.
@@ -22,6 +23,10 @@ class Post(models.Model):
     
     def mostrarComentarios(self):
         return self.comentarios.filter(aprobado=True)
+    
+    def get_absolute_url(self):
+        #return reverse('apps.blog:blog_detail', args=(str(self.id)))
+        return reverse("apps.blog:blog_detalle",kwargs={'id':self.id})
 
 class Categoria(models.Model):
     nombre=models.CharField(max_length=100)
@@ -38,4 +43,8 @@ class Comentario(models.Model):
 
     def aprobarComentario(self):
         self.aprobado=True
+        self.save()
+    
+    def eliminar(self):
+        self.aprobado=False
         self.save()

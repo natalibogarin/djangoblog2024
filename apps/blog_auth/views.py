@@ -1,29 +1,30 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import views as auth_views
-
-from forms import SignUpForm
+from django.views.generic.edit import CreateView
+from .forms import SignUpForm
 
 
 # Create your views here.
-class SignUpView(FormView):
+def registro(request):
     '''Vista que retorna el formulario de Registro de Usuario'''
-    template_name = "auth/registro.html"
-    form_class = SignUpForm
-    success_url = reverse_lazy('apps.blog_auth:login')
-
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            messages.success(request, 'Cuenta creada exitosamente')
+            form.save()
+    else:
+        form = SignUpForm()
+    return render(request, 'registration/registro.html', {'form':form})
     
 class Login(auth_views.LoginView):
-    template_name = "auth/login.html"
+    template_name = "registration/login.html"
 
 '''def login_view(request):
     if request.method == 'POST':
@@ -39,6 +40,7 @@ class Login(auth_views.LoginView):
 
 class Logout(LoginRequiredMixin,auth_views.LogoutView):
     ''' Vista de Cierre sesión de Usuario '''
-    template_name = "auth/logout.html"
+    template_name = ""
 
-    
+class WelcomeView(CreateView):
+    template_name = 'welcome.html'  

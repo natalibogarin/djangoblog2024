@@ -56,12 +56,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'myblog.urls'
 
+TEMPLATES_GRAL = os.path.join(os.path.dirname(BASE_DIR), 'templates')
 TEMPLATES_BLOG = os.path.join(os.path.dirname(BASE_DIR), 'templates/blog')
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATES_BLOG],
+        'DIRS': [TEMPLATES_GRAL,TEMPLATES_BLOG],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -133,3 +134,5 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'

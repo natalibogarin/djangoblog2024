@@ -16,15 +16,25 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.urls.conf import include
-from blog.views import *
+from django.urls.conf import include, re_path
+from django.conf.urls.static import static
+from django.conf import settings
+from apps.blog.views import *
+from apps.blog_auth.views import *
+
+app_name='apps.blog'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', include('apps.blog_auth.urls')),
     path("", index, name='index'),
     path("contacto", contacto, name='contacto'),
     path("posts", lista_posts, name='lista_posts'),
     path("posts-detalle/<int:id>/", postdetalle, name='postdetalle'),
+    re_path("post/nuevo", CreatePostView.as_view(), name='CreatePostView'),
+    re_path('comentario/<int:id>/approve', aprobar_comentario, name='aprobar_comentario'),
+    re_path('comentario/<int:id>/remove', eliminar_comentario, name='eliminar_comentario'),
+    path("filtro-categorias/<categoria>/", lista_categorias, name='lista_categorias'),
     #path('', IndexView.as_view(), name='index'),
     #path('inicio', AboutView.as_view(template_name='inicio.html')),
     #path('index', AboutView.as_view()),
